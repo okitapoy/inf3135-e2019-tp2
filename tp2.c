@@ -4,6 +4,11 @@
 #include <ctype.h>
 
 
+
+
+
+#define IN "<"
+#define OUT ">"
 #define ARG_CODE_P  "-c"
 #define ARG_ENCRYPT "-e"
 #define ARG_DECRYPT "-d"
@@ -141,7 +146,7 @@ void lireFichier(char *pointeur, const char fichierEntree[],int taille,int erreu
    exit(erreur);
  }
 
-printf("\n");
+//printf("\n");============================*****************************************************
 
 }
 
@@ -193,19 +198,24 @@ int verfierArgCryptage(char *tab[],int tailleTab){
   int codeRetour = 0;
   int cryptage = 1;
   int decryptage = -1;
+  int compt = 0;
 
   for(int i = 1; i < tailleTab; i++){
      if(strcmp(ARG_ENCRYPT,tab[i]) == 0){
        codeRetour = cryptage;
+       compt++;
      }else if(strcmp(ARG_DECRYPT,tab[i]) == 0){
        codeRetour = decryptage;
+      compt++;
      }
   }
 
   if(codeRetour == 0){
     printf("argument -e ou -d n'est pas present\n");
     exit(4);
-  }
+  }else if(compt > 1){
+   exit (12);
+ }
 
    return codeRetour;
 
@@ -255,7 +265,48 @@ void veriferChiffre(char *tab[],int indiceFixe){
 
 
 
+//verifier < ou >
+void verifierStd(char *tab[],int tailleTab){
+  int codeRetour = -1;
+
+  for(int i = 1; i < tailleTab; i++){
+     if(strcmp("<",tab[i]) == 0 || strcmp(">",tab[i]) == 0){
+       codeRetour++;
+      // printf("trouveeeeeeeeeeeeeee\n"); //-----------------------------------
+      // break;
+      }
+
+     for(int n = 0; n < strlen(tab[i]); n++){
+      printf("%c''''",tab[i][n]);
+       if(tab[i][n] == '<' ||  tab[i][n] == '>'){
+          codeRetour++;
+        // break;
+       }
+     }
+
+  }
+
+  if(codeRetour == -1){
+   exit(22);
+  }
+
+
+  //return codeRetour;
+
+}
+
+
+
 int main(int argc,char * argv[]) {
+
+//for(int i = 1 ; i < argc; i++){
+//printf("%s\n",argv[i]);
+
+
+//}
+
+
+//FILE *fp = stdin;
 
   //indice d'ou se trouve les args dans le tableau
   int indiceCodeP;
@@ -328,9 +379,33 @@ int main(int argc,char * argv[]) {
     }
 
   }else{
-    pointeurEntree = (char*) malloc(1000 * sizeof(char));
-    printf("Veillez entrer le texte pour le cryptage/decryptage :  ");
+/*
+
+  //FILE *fichierIn = NULL;
+  int caractere;
+  int sizeFichierEntree = 0;
+  //fichierIn = fopen(fichierEntree,"r");
+
+  if(fp != NULL){
+    do{
+
+       caractere = fgetc(fp);
+       sizeFichierEntree++;
+
+   }while(caractere != EOF);
+ // fclose(fichierIn);
+
+ }
+*/
+//printf("longueur de  ssstttiiinnnn = %d",sizeFichierEntree);
+
+
+//if(sizeFichierEntree > 0){
+   pointeurEntree = (char*) malloc(1000 * sizeof(char));
    fgets(pointeurEntree,1000,stdin);
+//}
+
+
   }
 
 
@@ -406,7 +481,7 @@ cryptage(pointeurEntree,pointeurAlpha,cle);
 
 
 
-printf("\nFIN NORMALE DU PROGRAMME\n");
+//printf("\nFIN NORMALE DU PROGRAMME\n");
 
 
     return 0;
