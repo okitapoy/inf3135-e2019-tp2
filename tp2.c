@@ -15,7 +15,7 @@
 #define ARG_CLE "-k"
 #define ARG_B "-b"
 #define ARG_BF "--bruteforce"
-#define MODELS "-l"
+#define ARG_MODELS "-l"
 
 #define ARG_ENTREE "-i"
 #define ARG_SORTIE "-o"
@@ -30,7 +30,7 @@ void valider(char *tab[],int taille){
 
        if(strcmp(tab[i],ARG_CODE_P) != 0 && strcmp(tab[i],ARG_ENCRYPT) != 0 && strcmp(tab[i],ARG_DECRYPT) != 0 && 
           strcmp(tab[i],ARG_CLE) != 0 &&  strcmp(tab[i],ARG_ENTREE) != 0 &&  strcmp(tab[i],ARG_SORTIE) != 0 && 
-         strcmp(tab[i],ARG_FIC_ALPHA) != 0 && strcmp(tab[i],ARG_B) != 0 && strcmp(tab[i],ARG_BF) != 0 && strcmp(tab[i],MODELS) != 0  ){
+         strcmp(tab[i],ARG_FIC_ALPHA) != 0 && strcmp(tab[i],ARG_B) != 0 && strcmp(tab[i],ARG_BF) != 0 && strcmp(tab[i],ARG_MODELS) != 0  ){
 
 
 
@@ -149,7 +149,6 @@ void lireFichier(char *pointeur, const char fichierEntree[],int taille,int erreu
    exit(erreur);
  }
 
-//printf("\n");============================*****************************************************
 
 }
 
@@ -178,16 +177,22 @@ int longueurFichier(const char fichierEntree[]){
 }
 
 
+//verifier les arguments des chemins des fichier
 int verifierArgFichier(char *tab[],int tailleTab,char argument[]){
   int codeRetour = -1;
-
+  int compteur = 0;
 
   for(int i = 1; i < tailleTab; i++){
      if(strcmp(argument,tab[i]) == 0){
         codeRetour = i;
+        compteur++;
      }
 
   }
+
+ if(compteur > 1){
+   exit(12);
+ }
 
   return codeRetour;
 
@@ -196,12 +201,15 @@ int verifierArgFichier(char *tab[],int tailleTab,char argument[]){
 
 
 
-//fonction qui verifier si -e ou -d est present retourne 1  pour crypter et -1 pour decrypter
+//fonction qui verifier si -e ou -d ou -b est present retourne 1  pour crypter et -1 pour decrypter et -5 pour bruteforce
 int verfierArgCryptage(char *tab[],int tailleTab){
   int codeRetour = 0;
   int cryptage = 1;
   int decryptage = -1;
   int compt = 0;
+  int retourBrutforce = -5;
+
+  int comptBrut = 0; ///------------ajoute bruteforce
 
   for(int i = 1; i < tailleTab; i++){
      if(strcmp(ARG_ENCRYPT,tab[i]) == 0){
@@ -210,13 +218,16 @@ int verfierArgCryptage(char *tab[],int tailleTab){
      }else if(strcmp(ARG_DECRYPT,tab[i]) == 0){
        codeRetour = decryptage;
       compt++;
+     }else if(strcmp(ARG_B,tab[i]) == 0 || strcmp(ARG_BF,tab[i]) == 0){///=-----------------ajout pour bruteforce
+      codeRetour = retourBrutforce;
+      comptBrut++;
      }
   }
 
   if(codeRetour == 0){
-    printf("argument -e ou -d n'est pas present\n");
+    printf("argument -e ou -d ou -b n'est pas present\n");
     exit(4);
-  }else if(compt > 1){
+  }else if(compt > 1 || comptBrut > 1 || ( compt != 0 && comptBrut != 0)){///=---------------------ajoute bruteforce partir de compt brut
    exit (12);
  }
 
@@ -229,15 +240,19 @@ int verfierArgCryptage(char *tab[],int tailleTab){
 
 int verifierArgPresent(char *tab[],int tailleTab,char argument[],int codeErreur){
   int codeRetour = -1;
+  int compteur = 0;
 
   for(int i = 1; i < tailleTab; i++){
      if(strcmp(argument,tab[i]) == 0){
        codeRetour = i;
+       compteur++;
      }
   }
 
   if(codeRetour ==  -1){
    exit(codeErreur);
+  }else if(compteur > 1){
+   exit(12);
   }
 
 
@@ -268,22 +283,19 @@ void veriferChiffre(char *tab[],int indiceFixe){
 
 
 
-//verifier < ou >
+/*/verifier < ou >
 void verifierStd(char *tab[],int tailleTab){
   int codeRetour = -1;
 
   for(int i = 1; i < tailleTab; i++){
      if(strcmp("<",tab[i]) == 0 || strcmp(">",tab[i]) == 0){
        codeRetour++;
-      // printf("trouveeeeeeeeeeeeeee\n"); //-----------------------------------
-      // break;
       }
 
      for(int n = 0; n < strlen(tab[i]); n++){
       printf("%c''''",tab[i][n]);
        if(tab[i][n] == '<' ||  tab[i][n] == '>'){
           codeRetour++;
-        // break;
        }
      }
 
@@ -294,22 +306,13 @@ void verifierStd(char *tab[],int tailleTab){
   }
 
 
-  //return codeRetour;
 
-}
+}*/
 
 
 
 int main(int argc,char * argv[]) {
 
-//for(int i = 1 ; i < argc; i++){
-//printf("%s\n",argv[i]);
-
-
-//}
-
-
-//FILE *fp = stdin;
 
   //indice d'ou se trouve les args dans le tableau
   int indiceCodeP;
@@ -318,11 +321,13 @@ int main(int argc,char * argv[]) {
   int indiceFichierEntree;
   int indiceFichierSortie;
   int indiceFichierAlpha;
+  int indiceFichierModeles;
 
   long cle;
   char fichierEntree[100];
   char fichierSortie[100];
   char fichierAlpha[100];
+//  char fichierModeles[100];
 
 
 
@@ -351,18 +356,22 @@ int main(int argc,char * argv[]) {
 
 
   indiceCryptage = verfierArgCryptage(argv,argc);
-  indiceNombreSaut  =  verifierArgPresent(argv,argc,ARG_CLE,7) + 1;
 
 
-//valider la cle et transformenr en string
-  if(indiceNombreSaut >= argc){
-    printf("ERREUR 7.largument de -k est invalide");
-    exit(7);
-  }else{
-    veriferChiffre(argv,indiceNombreSaut);
-    cle = strtol(argv[indiceNombreSaut],NULL,10);
-    cle = cle * indiceCryptage;
+  if(indiceCryptage != -5){// -5 = bruteforce
+     indiceNombreSaut  =  verifierArgPresent(argv,argc,ARG_CLE,7) + 1;
+
+    //valider la cle et transformenr en string
+     if(indiceNombreSaut >= argc){
+       printf("ERREUR 7.largument de -k est invalide");
+       exit(7);
+     }else{
+       veriferChiffre(argv,indiceNombreSaut);
+       cle = strtol(argv[indiceNombreSaut],NULL,10);
+       cle = cle * indiceCryptage;
+     }
   }
+
 
 
 //fichier en entree 
@@ -382,32 +391,9 @@ int main(int argc,char * argv[]) {
     }
 
   }else{
-/*
 
-  //FILE *fichierIn = NULL;
-  int caractere;
-  int sizeFichierEntree = 0;
-  //fichierIn = fopen(fichierEntree,"r");
-
-  if(fp != NULL){
-    do{
-
-       caractere = fgetc(fp);
-       sizeFichierEntree++;
-
-   }while(caractere != EOF);
- // fclose(fichierIn);
-
- }
-*/
-//printf("longueur de  ssstttiiinnnn = %d",sizeFichierEntree);
-
-
-//if(sizeFichierEntree > 0){
    pointeurEntree = (char*) malloc(1000 * sizeof(char));
    fgets(pointeurEntree,1000,stdin);
-//}
-
 
   }
 
@@ -447,7 +433,32 @@ int main(int argc,char * argv[]) {
 
 
 
-cryptage(pointeurEntree,pointeurAlpha,cle);
+
+ if(indiceCryptage != -5){
+    cryptage(pointeurEntree,pointeurAlpha,cle);
+ }else{//mode bruteforce  mode bruteforce    mode bruteforcemode bruteforce  mode bruteforce----------------------------mode bruteforce
+  indiceFichierModeles = verifierArgFichier(argv,argc,ARG_MODELS) + 1;
+
+  if(indiceFichierModeles == 0){
+    exit(9);
+  }
+
+
+ }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
