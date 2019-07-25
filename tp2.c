@@ -13,6 +13,9 @@
 #define ARG_ENCRYPT "-e"
 #define ARG_DECRYPT "-d"
 #define ARG_CLE "-k"
+#define ARG_B "-b"
+#define ARG_BF "--bruteforce"
+#define MODELS "-l"
 
 #define ARG_ENTREE "-i"
 #define ARG_SORTIE "-o"
@@ -27,7 +30,7 @@ void valider(char *tab[],int taille){
 
        if(strcmp(tab[i],ARG_CODE_P) != 0 && strcmp(tab[i],ARG_ENCRYPT) != 0 && strcmp(tab[i],ARG_DECRYPT) != 0 && 
           strcmp(tab[i],ARG_CLE) != 0 &&  strcmp(tab[i],ARG_ENTREE) != 0 &&  strcmp(tab[i],ARG_SORTIE) != 0 && 
-         strcmp(tab[i],ARG_FIC_ALPHA) != 0 ){
+         strcmp(tab[i],ARG_FIC_ALPHA) != 0 && strcmp(tab[i],ARG_B) != 0 && strcmp(tab[i],ARG_BF) != 0 && strcmp(tab[i],MODELS) != 0  ){
 
 
 

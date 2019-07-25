@@ -27,7 +27,10 @@ test:
 
 
 test2:
-	./tp2 -c OKIK08078702 -e -k 80 
+	./tp2 -c OKIK08078702 -e -k 80
+
+valgrind:
+	valgrind --tool=memcheck --leak-check=yes ./tp2 
 
 
 .PHONY: clean
