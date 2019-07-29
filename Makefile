@@ -1,5 +1,5 @@
 OPTIONS = -Wall -pedantic -std=c11
-CP = cp.txt
+CP =`cat cp.txt`
 
 default: tp2 
 
@@ -27,10 +27,10 @@ test:
 
 
 test2:
-	./tp2 -c OKIK08078702 -b -i in.txt -o out.txt -l dossierMod
+	./tp2 -c OKIK08078702 -b -i in.txt -o out.txt -l dossierMod/
 
-valgrind:
-	valgrind --tool=memcheck --leak-check=yes ./tp2 
+valgrind:tp2
+	valgrind --tool=memcheck --leak-check=full ./tp2 -c ${CP} 
 
 
 .PHONY: clean

@@ -106,51 +106,6 @@ return nbr;
 
 }
 
-/*
-
-int nombreMot(char filename[]){
-
-
-char leMot[30];
-int leMotChar = 0;
-
-
-        FILE * fp = fopen(filename, "r");
-        if (fp == NULL){
-        exit(12);
-        }
-	char c;
-        int count = 0;
-        while((c = fgetc(fp)) != EOF)
-        {
-                if(c == ' ' || c == '\n')
-                {
-                       printf("%s\n",leMot);
-                       memset(leMot,'\0',sizeof(leMot));
-                       leMotChar = 0;
-
-
-
-
-                        printf("\n");
-                        ++count;
-                }
-                else
-                {
-                       leMot[leMotChar] = c;
-                       leMotChar++;
-                }
-        }
-	fclose(fp);
-
-return count;
-
-
-
-}
-
-
-*/
 
 
 
@@ -314,7 +269,7 @@ void cryptage(char *leTexte,char *alphabet,long lePas){
     for(int i = 0; i < textLength; i++){
 
 
-      if(isalpha(leTexte[i])){
+  //    if(isalpha(leTexte[i])){
 
             for(int n = 0; n < alphaLength;n++){
                 if(leTexte[i] == alphabet[n]){
@@ -339,7 +294,7 @@ void cryptage(char *leTexte,char *alphabet,long lePas){
                 }
             }
 
-       }
+//       }
     }
 
 
@@ -903,6 +858,10 @@ int leMotChar = 0;
 
 cryptage(pointeurEntree,pointeurAlpha,( -1 * i));
 }
+
+//if(compteFra == compteAng && compteAng == compteAll){
+//exit(12);
+//}
 
 
 if(compteFra > compteAng && compteFra > compteAll){
