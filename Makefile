@@ -22,15 +22,15 @@ resultat:
 	git commit -m "ajout resultat"
 	git push origin master
 
-test:
+test:tp2 data
 	./tp2 -c OKIK08078702 -e -k 17 -a ./data  -i ./data/crypto-msg01.in -o ./data/crypto-msg01.out
 
 
 test2:
 	./tp2 -c OKIK08078702 -b -i in.txt -o out.txt -l dossierMod/
 
-valgrind:tp2
-	valgrind --tool=memcheck --leak-check=full ./tp2 -c ${CP} 
+valgrind:tp2 data
+	valgrind --tool=memcheck --leak-check=full ./tp2 -c ${CP} -e -k 17 -a ./data  -i ./data/crypto-msg01.in -o ./data/crypto-msg01.out 
 
 
 .PHONY: clean
