@@ -27,7 +27,7 @@ test:
 
 
 test2:
-	./tp2 -c OKIK08078702 -e -k 80
+	./tp2 -c OKIK08078702 -b -i in.txt -o out.txt -l dossierMod
 
 valgrind:
 	valgrind --tool=memcheck --leak-check=yes ./tp2 
@@ -35,6 +35,6 @@ valgrind:
 
 .PHONY: clean
 clean:
-	-rm tp2 tp2.o
+	-rm tp2 tp2.o listeFichiers.modeles_koy tempo.koy_x
 	rm -rf data
 

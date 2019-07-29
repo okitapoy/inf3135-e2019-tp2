@@ -23,6 +23,252 @@
 #define ALPHA "alphabet.txt"
 #define ALPHA_SLASH "/alphabet.txt"
 
+
+
+
+
+
+
+//reprent un mot
+typedef struct{
+  char mot[30];
+
+}mots_s;
+
+
+
+
+
+
+
+double compteMot(char text[]){
+
+    int taille = strlen(text);
+    double nbrMots = 1;
+
+    int indiceDebut = 0;
+
+    for(int i = 0; i < taille; i++){
+        if(text[i] != ' '){
+         indiceDebut = i;
+         break;
+        }
+    }
+
+
+
+
+    for(int i = indiceDebut; i < taille; i++){
+
+
+       if(text[i] == ' '){
+
+         while(text[i] == ' '){
+          i++;
+         };
+
+         if(text[i] != '\0'){
+         nbrMots++;
+         }
+       }
+    }
+
+return nbrMots;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+int occurrence(char string[],int taille, mots_s mots[]){
+
+int nbr = 0;
+for(int i = 0; i < taille ; i++){
+
+   if(strcmp(string,mots[i].mot) == 0 ){
+
+       nbr = 1;
+      break;
+
+   }
+
+}
+
+return nbr;
+
+
+}
+
+
+
+int nombreMot(char filename[]){
+
+
+char leMot[30];
+//char leMotVide[40];
+
+int leMotChar = 0;
+//int compteMot = 0;
+
+
+
+
+
+
+
+
+
+        FILE * fp = fopen(filename, "r");
+        if (fp == NULL){
+        exit(12);
+        }
+	char c;
+        int count = 0;
+        while((c = fgetc(fp)) != EOF)
+        {
+                if(c == ' ' || c == '\n')
+                {
+                       printf("%s\n",leMot);
+                       memset(leMot,'\0',sizeof(leMot));
+                       leMotChar = 0;
+
+
+
+
+                        printf("\n");
+                        ++count;
+                }
+                else
+                {
+                       leMot[leMotChar] = c;
+                       leMotChar++;
+                //      printf("%c", c);
+                }
+        }
+	fclose(fp);
+
+return count;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//verifier la langue retourne 1 : francais   2 : anglais   3 : allemand
+int verifierLangue(char fichierMod[]){
+
+    int langue = 0; // 1:francais      2:anglais   3:allemand
+
+    for(int i = 0; i < strlen(fichierMod); i++){
+        if(fichierMod[i] == '.'){
+
+            if(i + 2 == strlen(fichierMod) - 1){
+                if(fichierMod[i + 1] == 'f' && fichierMod[i + 2] == 'r'){
+                    langue = 1;
+   //                 printf("cest francais\n");
+                }else if (fichierMod[i + 1] == 'e' && fichierMod[i + 2] == 'n'){
+                    langue = 2;
+     //               printf("cest anglais\n");
+                }else if (fichierMod[i + 1] == 'd' && fichierMod[i + 2] == 'e'){
+                    langue = 3;
+       //             printf("cest allemand\n");
+
+                }
+            }
+
+	}
+    }
+
+    return langue;
+
+}
+
+
+
+
+
+
+// compte nombr e de fichier dans le dossier
+int nombreFichierMod(char nomFichier[]){
+
+
+        FILE * fp = fopen(nomFichier, "r");
+        if (fp == NULL){
+          exit(12);
+        }
+	char c;
+        int count = 0;
+        while((c = fgetc(fp)) != EOF)
+        {
+                if(c == ' ' || c == '\n')
+                {
+                        ++count;
+                }
+        }
+	fclose(fp);
+return count;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+// prend le contenu de -l et l'aligne : un fichier par ligne et met dans un  fichier nomme listefichier.modele_koy
+void alignerModele(char path[]){
+
+char command[100];
+//char commandModel[100];
+//char path[] = "dossier "; // -l modele
+char p1[] = "cd ";
+char p2[] = "; ls -1 > ../listeFichiers.modeles_koy";
+
+strcat(command,p1);
+strcat(command,path);
+strcat(command,p2);
+
+system(command);
+}
+
+
+
+
+
+
+//////////////---------------------------------fonction tp1 ver le bas 
+
+
+
+
+
+
+
+
 void valider(char *tab[],int taille){
 
    for(int i = 1; i < taille; i++){
@@ -327,7 +573,7 @@ int main(int argc,char * argv[]) {
   char fichierEntree[100];
   char fichierSortie[100];
   char fichierAlpha[100];
-//  char fichierModeles[100];
+  char fichierModeles[100];
 
 
 
@@ -442,6 +688,321 @@ int main(int argc,char * argv[]) {
   if(indiceFichierModeles == 0){
     exit(9);
   }
+
+   printf("entree dans le block brute force\n"); //------------------------
+
+//fichierModeles
+//listeFichiers.modeles_koy
+   strcpy(fichierModeles,argv[indiceFichierModeles]);
+
+   printf("nom fichier modele : %s\n",fichierModeles);  //------------------------
+
+  alignerModele(fichierModeles);
+
+  int nombreFichier = nombreFichierMod("listeFichiers.modeles_koy");
+
+
+  mots_s *motFrancais = (mots_s*) malloc(3000 * sizeof(mots_s));
+  mots_s *motAnglais = (mots_s*) malloc(3000 * sizeof(mots_s));
+  mots_s *motAllemand = (mots_s*) malloc(3000 * sizeof(mots_s));
+mots_s *modeles = (mots_s*) malloc(nombreFichier * sizeof(mots_s));
+  int indiceFrancais = 0;
+  int indiceAnglais = 0;
+  int indiceAllemand = 0;
+int nbrModele = 0;
+  int langue = 0;
+  int ficValide = 0; 
+
+
+
+
+       char filename[] = "listeFichiers.modeles_koy";
+  //     char pathLangue[40];
+       char barre[] = "/";
+
+
+
+
+
+
+
+
+
+
+         FILE * fp = fopen(filename, "r");
+        if (fp == NULL){
+        exit (12);
+        }
+        char c[100];
+
+         while((fgets(c,100,fp)) != NULL) {
+
+
+c[strlen(c) -  1] = '\0'; 
+//char fin[] = "france1.fr";
+
+//        int taillePath = strlen(fichierModeles) + strlen(c) + 1;
+        char pathLangue[1024];
+
+
+//strcpy(pathLangue,fichierModeles);
+           strcat(pathLangue,fichierModeles);
+//strcat(barre,c);
+           strcat(pathLangue,barre);
+           strcat(pathLangue,c);
+//          strcat(pathLangue,barre);
+
+//printf("%s\n",pathLangue);
+//prendreMot(pathLangue);
+strcpy(modeles[nbrModele].mot,pathLangue);
+nbrModele++; 
+
+
+          memset(pathLangue,'\0',sizeof(pathLangue));
+          langue = 0;
+       }
+	fclose(fp);
+
+
+
+for(int i = 0; i < nbrModele; i++){
+
+
+printf("path : %s\n",modeles[i].mot);
+
+
+
+
+ langue = verifierLangue(modeles[i].mot);
+
+
+char leMot[30];
+//char leMotVide[40];
+
+int leMotChar = 0;
+//int compteMot = 0;
+
+
+
+        FILE * fp3 = fopen(modeles[i].mot, "r");
+        if (fp3 == NULL){
+        exit(12);
+        }
+        char cara;
+        int count = 0;
+        while((cara = fgetc(fp3)) != EOF)
+        {
+                if(cara == ' ' || cara == '\n')
+                {
+
+
+                    if(langue == 1){
+                    ficValide++;
+
+                    strcpy(motFrancais[indiceFrancais].mot,leMot);
+
+//printf("%d\n",indiceFrancais);
+                    indiceFrancais++;
+
+
+                    }else if(langue == 2){
+                     ficValide++;
+
+                    strcpy(motAnglais[indiceAnglais].mot,leMot);
+                    indiceAnglais++;
+
+                    }else if(langue == 3){
+                     ficValide++;
+
+                     strcpy(motAllemand[indiceAllemand].mot,leMot);
+                     indiceAllemand++;
+                    }
+
+
+
+
+                     //  printf("%s\n",leMot);
+                       memset(leMot,'\0',sizeof(leMot));
+                       leMotChar = 0;
+
+
+
+
+                        printf("\n");
+                        ++count;
+                }
+                else
+                {
+                       leMot[leMotChar] = cara;
+                       leMotChar++;
+                //      printf("%c", c);
+                }
+        }
+        fclose(fp);
+
+
+}
+
+
+
+
+
+
+
+
+double nbrMotsEntree = compteMot(pointeurEntree);
+int cleBruteFra = 0;
+int cleBruteAng = 0;
+int cleBruteAll = 0;
+
+int occFra = 0;
+int occAng = 0;
+int occAll = 0;
+
+double compteFra = 0;
+double compteAng = 0;
+double compteAll = 0;
+
+int debutAlpha = -1 * sizeFichierAlpha;
+
+for(int i = debutAlpha; i <= sizeFichierAlpha; i++){
+cryptage(pointeurEntree,pointeurAlpha,i);
+
+
+
+    FILE *tempo = NULL;
+    tempo = fopen("tempo.koy_x","w");
+   if(tempo != NULL){
+   fputs(pointeurEntree,tempo);
+   fclose(tempo);
+
+   }else{
+   printf("ERREUR 6.erreur avec le fichier sortie");
+   exit(12);
+   }
+
+
+
+
+
+
+char leMot[30];
+//char leMotVide[40];
+
+int leMotChar = 0;
+//int compteMot = 0;
+
+
+         FILE * fp = fopen("tempo.koy_x", "r");
+        if (fp == NULL){
+         exit(12);
+        }
+        char c;
+        int count = 0;
+        while((c = fgetc(fp)) != EOF)
+        {
+                if(c == ' ' || c == '\n')
+                {
+
+                occFra = 0;
+                occAng = 0;
+                occAll = 0;
+
+
+                      //occurrence(char string[],int taille, mots_s mots[])
+                      occFra = occurrence(leMot, indiceFrancais, motFrancais);
+
+                      if((occFra / nbrMotsEntree) >= 1){
+                      cleBruteFra = i;
+                      compteFra = 1;
+                      break;
+                      }
+
+                      if((occFra / nbrMotsEntree) > compteFra){
+                         cleBruteFra = i;
+                         compteFra = (occFra / nbrMotsEntree);
+                       }
+
+
+
+                     occAng = occurrence(leMot, indiceAnglais, motAnglais);
+
+                      if((occAng / nbrMotsEntree) >= 1){
+                       cleBruteAng = i;
+                      compteAng = 1;
+                      break;
+                      }
+
+
+                      if((occAng / nbrMotsEntree) > compteAng){
+                         cleBruteAng = i;
+                         compteAng = (occAng / nbrMotsEntree);
+                       }
+
+
+
+                    occAll = occurrence(leMot, indiceAllemand, motAllemand);
+
+
+                      if((occAll / nbrMotsEntree) >= 1){
+                      cleBruteAll = i;
+                      compteAll = 1;
+                      break;
+                      }
+
+                       if((occAll / nbrMotsEntree) > compteAll){
+                        cleBruteAll = i;
+                         compteAll = (occAll / nbrMotsEntree);
+                       }
+
+
+
+
+                       //printf("%s\n",leMot);
+                       memset(leMot,'\0',sizeof(leMot));
+                       leMotChar = 0;
+
+
+
+
+                       // printf("\n");
+                        ++count;
+                }
+                else
+                {
+                       leMot[leMotChar] = c;
+                       leMotChar++;
+                //      printf("%c", c);
+                }
+        }
+	fclose(fp);
+
+
+
+
+
+
+cryptage(pointeurEntree,pointeurAlpha,( -1 * i));
+}
+
+
+if(compteFra > compteAng && compteFra > compteAll){
+cryptage(pointeurEntree,pointeurAlpha, cleBruteFra);
+
+}else if(compteAng > compteFra && compteAng > compteAll){
+cryptage(pointeurEntree,pointeurAlpha,cleBruteAng);
+
+}else{
+cryptage(pointeurEntree,pointeurAlpha,cleBruteAll);
+
+}
+
+
+
+
+//printf("tes t sortie\n");
+
+
 
 
  }
