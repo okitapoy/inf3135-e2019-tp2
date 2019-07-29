@@ -106,23 +106,13 @@ return nbr;
 
 }
 
-
+/*
 
 int nombreMot(char filename[]){
 
 
 char leMot[30];
-//char leMotVide[40];
-
 int leMotChar = 0;
-//int compteMot = 0;
-
-
-
-
-
-
-
 
 
         FILE * fp = fopen(filename, "r");
@@ -149,7 +139,6 @@ int leMotChar = 0;
                 {
                        leMot[leMotChar] = c;
                        leMotChar++;
-                //      printf("%c", c);
                 }
         }
 	fclose(fp);
@@ -161,7 +150,7 @@ return count;
 }
 
 
-
+*/
 
 
 
@@ -184,13 +173,10 @@ int verifierLangue(char fichierMod[]){
             if(i + 2 == strlen(fichierMod) - 1){
                 if(fichierMod[i + 1] == 'f' && fichierMod[i + 2] == 'r'){
                     langue = 1;
-   //                 printf("cest francais\n");
                 }else if (fichierMod[i + 1] == 'e' && fichierMod[i + 2] == 'n'){
                     langue = 2;
-     //               printf("cest anglais\n");
                 }else if (fichierMod[i + 1] == 'd' && fichierMod[i + 2] == 'e'){
                     langue = 3;
-       //             printf("cest allemand\n");
 
                 }
             }
@@ -243,8 +229,6 @@ return count;
 void alignerModele(char path[]){
 
 char command[100];
-//char commandModel[100];
-//char path[] = "dossier "; // -l modele
 char p1[] = "cd ";
 char p2[] = "; ls -1 > ../listeFichiers.modeles_koy";
 
@@ -260,7 +244,6 @@ system(command);
 
 
 
-//////////////---------------------------------fonction tp1 ver le bas 
 
 
 
@@ -455,7 +438,7 @@ int verfierArgCryptage(char *tab[],int tailleTab){
   int compt = 0;
   int retourBrutforce = -5;
 
-  int comptBrut = 0; ///------------ajoute bruteforce
+  int comptBrut = 0;
 
   for(int i = 1; i < tailleTab; i++){
      if(strcmp(ARG_ENCRYPT,tab[i]) == 0){
@@ -464,7 +447,7 @@ int verfierArgCryptage(char *tab[],int tailleTab){
      }else if(strcmp(ARG_DECRYPT,tab[i]) == 0){
        codeRetour = decryptage;
       compt++;
-     }else if(strcmp(ARG_B,tab[i]) == 0 || strcmp(ARG_BF,tab[i]) == 0){///=-----------------ajout pour bruteforce
+     }else if(strcmp(ARG_B,tab[i]) == 0 || strcmp(ARG_BF,tab[i]) == 0){
       codeRetour = retourBrutforce;
       comptBrut++;
      }
@@ -473,7 +456,7 @@ int verfierArgCryptage(char *tab[],int tailleTab){
   if(codeRetour == 0){
     printf("argument -e ou -d ou -b n'est pas present\n");
     exit(4);
-  }else if(compt > 1 || comptBrut > 1 || ( compt != 0 && comptBrut != 0)){///=---------------------ajoute bruteforce partir de compt brut
+  }else if(compt > 1 || comptBrut > 1 || ( compt != 0 && comptBrut != 0)){
    exit (12);
  }
 
@@ -528,32 +511,6 @@ void veriferChiffre(char *tab[],int indiceFixe){
 }
 
 
-
-/*/verifier < ou >
-void verifierStd(char *tab[],int tailleTab){
-  int codeRetour = -1;
-
-  for(int i = 1; i < tailleTab; i++){
-     if(strcmp("<",tab[i]) == 0 || strcmp(">",tab[i]) == 0){
-       codeRetour++;
-      }
-
-     for(int n = 0; n < strlen(tab[i]); n++){
-      printf("%c''''",tab[i][n]);
-       if(tab[i][n] == '<' ||  tab[i][n] == '>'){
-          codeRetour++;
-       }
-     }
-
-  }
-
-  if(codeRetour == -1){
-   exit(22);
-  }
-
-
-
-}*/
 
 
 
@@ -682,20 +639,15 @@ int main(int argc,char * argv[]) {
 
  if(indiceCryptage != -5){
     cryptage(pointeurEntree,pointeurAlpha,cle);
- }else{//mode bruteforce  mode bruteforce    mode bruteforcemode bruteforce  mode bruteforce----------------------------mode bruteforce
+ }else{
   indiceFichierModeles = verifierArgFichier(argv,argc,ARG_MODELS) + 1;
 
   if(indiceFichierModeles == 0){
     exit(9);
   }
 
-   printf("entree dans le block brute force\n"); //------------------------
-
-//fichierModeles
-//listeFichiers.modeles_koy
    strcpy(fichierModeles,argv[indiceFichierModeles]);
 
-   printf("nom fichier modele : %s\n",fichierModeles);  //------------------------
 
   alignerModele(fichierModeles);
 
@@ -717,13 +669,7 @@ int nbrModele = 0;
 
 
        char filename[] = "listeFichiers.modeles_koy";
-  //     char pathLangue[40];
        char barre[] = "/";
-
-
-
-
-
 
 
 
@@ -738,24 +684,15 @@ int nbrModele = 0;
          while((fgets(c,100,fp)) != NULL) {
 
 
-c[strlen(c) -  1] = '\0'; 
-//char fin[] = "france1.fr";
-
-//        int taillePath = strlen(fichierModeles) + strlen(c) + 1;
-        char pathLangue[1024];
+c[strlen(c) -  1] = '\0';
+ char pathLangue[1024];
 
 
-//strcpy(pathLangue,fichierModeles);
            strcat(pathLangue,fichierModeles);
-//strcat(barre,c);
            strcat(pathLangue,barre);
            strcat(pathLangue,c);
-//          strcat(pathLangue,barre);
-
-//printf("%s\n",pathLangue);
-//prendreMot(pathLangue);
 strcpy(modeles[nbrModele].mot,pathLangue);
-nbrModele++; 
+nbrModele++;
 
 
           memset(pathLangue,'\0',sizeof(pathLangue));
@@ -768,19 +705,12 @@ nbrModele++;
 for(int i = 0; i < nbrModele; i++){
 
 
-printf("path : %s\n",modeles[i].mot);
-
-
-
 
  langue = verifierLangue(modeles[i].mot);
 
 
 char leMot[30];
-//char leMotVide[40];
-
 int leMotChar = 0;
-//int compteMot = 0;
 
 
 
@@ -801,7 +731,6 @@ int leMotChar = 0;
 
                     strcpy(motFrancais[indiceFrancais].mot,leMot);
 
-//printf("%d\n",indiceFrancais);
                     indiceFrancais++;
 
 
@@ -821,21 +750,18 @@ int leMotChar = 0;
 
 
 
-                     //  printf("%s\n",leMot);
                        memset(leMot,'\0',sizeof(leMot));
                        leMotChar = 0;
 
 
 
 
-                        printf("\n");
                         ++count;
                 }
                 else
                 {
                        leMot[leMotChar] = cara;
                        leMotChar++;
-                //      printf("%c", c);
                 }
         }
         fclose(fp);
@@ -887,10 +813,7 @@ cryptage(pointeurEntree,pointeurAlpha,i);
 
 
 char leMot[30];
-//char leMotVide[40];
-
 int leMotChar = 0;
-//int compteMot = 0;
 
 
          FILE * fp = fopen("tempo.koy_x", "r");
@@ -909,7 +832,6 @@ int leMotChar = 0;
                 occAll = 0;
 
 
-                      //occurrence(char string[],int taille, mots_s mots[])
                       occFra = occurrence(leMot, indiceFrancais, motFrancais);
 
                       if((occFra / nbrMotsEntree) >= 1){
@@ -958,21 +880,18 @@ int leMotChar = 0;
 
 
 
-                       //printf("%s\n",leMot);
                        memset(leMot,'\0',sizeof(leMot));
                        leMotChar = 0;
 
 
 
 
-                       // printf("\n");
                         ++count;
                 }
                 else
                 {
                        leMot[leMotChar] = c;
                        leMotChar++;
-                //      printf("%c", c);
                 }
         }
 	fclose(fp);
@@ -996,11 +915,6 @@ cryptage(pointeurEntree,pointeurAlpha,cleBruteAng);
 cryptage(pointeurEntree,pointeurAlpha,cleBruteAll);
 
 }
-
-
-
-
-//printf("tes t sortie\n");
 
 
 
