@@ -3,12 +3,8 @@
 #include <string.h>
 #include <ctype.h>
 
-
-
-
-
-#define IN "<"
-#define OUT ">"
+#define IN "<" //pourquoi ca ?
+#define OUT ">" //pourquoi ca ?
 #define ARG_CODE_P  "-c"
 #define ARG_ENCRYPT "-e"
 #define ARG_DECRYPT "-d"
@@ -24,22 +20,10 @@
 #define ALPHA_SLASH "/alphabet.txt"
 
 
-
-
-
-
-
 //reprent un mot
 typedef struct{
   char mot[30];
-
 }mots_s;
-
-
-
-
-
-
 
 double compteMot(char text[]){
 
@@ -172,38 +156,19 @@ return count;
 
 
 
-
-
-
-
-
-
-
-
 // prend le contenu de -l et l'aligne : un fichier par ligne et met dans un  fichier nomme listefichier.modele_koy
 void alignerModele(char path[]){
 
-char command[100];
-char p1[] = "cd ";
-char p2[] = "; ls -1 > ../listeFichiers.modeles_koy";
+  char command[100];
+  //char p1[] = "cd ";
+  //char p2[] = "; ls -1 > ../listeFichiers.modeles_koy";
 
-strcat(command,p1);
-strcat(command,path);
-strcat(command,p2);
+  strcat(command,"ls -1");
+  strcat(command,path);
+  strcat(command," > ./listeFichiers.modeles_koy");
 
-system(command);
+  system(command);
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
